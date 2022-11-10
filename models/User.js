@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 let schema = new mongoose.Schema({
     name:{type:String,required:true},
     lastname:{type:String,required:true},
+    role:{type:String,required:true},
     age:{type:Number,required:true},
     email:{type:String,required:true},
     code:{type:String,required:true},
@@ -12,7 +13,6 @@ let schema = new mongoose.Schema({
 
 })
 
-const Admin = mongoose.model('admins',schema)
 const User = mongoose.model('users', schema)
 
-module.exports = {Admin, User}
+module.exports = User
