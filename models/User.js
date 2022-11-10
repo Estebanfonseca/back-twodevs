@@ -12,6 +12,7 @@ let schema = new mongoose.Schema({
 
 })
 
-const User = mongoose.model('admins',schema)
+const Admin = mongoose.model('admins',schema)
+const User = mongoose.model('users', schema)
 
-module.exports = User
+module.exports = {Admin, User}
