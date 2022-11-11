@@ -26,13 +26,29 @@ const controller = {
         }
     },
     read: async (req,res)=>{
+        let query = {}
+        let order = {}
+        let name
         try{
-            let hotel = await Hotel.find()
-            res.status(200).json({
-                response: hotel,
-                success:true,
-                message: 'all hotels are here!'
-            })
+            req.query.name?
+            name= req.query.name.toLowerCase() : ''
+            name ? query.name = { $regex : name, $options: 'i' } : ''
+            req.query.order?
+            order = {name:req.queryorder} : ''
+            let hotel = await Hotel.find(query).sort(order)
+            if(hotel){
+                res.status(200).json({
+                    response: hotel,
+                    success:true,
+                    message: 'all hotels are here!'
+                })
+            }else{
+                res.status(404).json({
+                    success:false,
+                    message:'not found'
+                })
+            }
+            
         }catch(err){
             res.status(400).json({
                 success: false,
