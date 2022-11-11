@@ -2,8 +2,8 @@ const User = require('../models/User')
 
 const controller = {
     create: async(req, res) => {
-        let newEmail = req.body.email.toLowerCase()
         try{
+            let newEmail = req.body.email.toLowerCase()
             let alreadyExist = await User.find({email: { $regex : new RegExp(`^${newEmail}$`, 'i') }})
             if(alreadyExist.length > 0){
                 res.status(400).json({
