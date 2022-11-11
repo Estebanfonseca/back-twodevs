@@ -1,9 +1,10 @@
 let router = require('express').Router()
 
-let {create} = require('../controllers/shows')
+let {create,update} = require('../controllers/shows')
 
 
 router.post('/', create)
+router.patch('/:id', update)
 
 
 
