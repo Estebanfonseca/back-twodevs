@@ -42,8 +42,27 @@ const controller = {
                 success: false,
                 message: err.message
             })
-        }}
-    
+        }
+    },
+    destroy: async (req,res)=>{
+        let {id} = req.params
+        try{
+            let show = await Show.findOneAndDelete({_id:id})
+            show? res.status(200).json({
+                response: show,
+                    success:true,
+                    message: 'the show was delete'
+            }) : res.status(404).json({
+                success:false,
+                message:'not found'
+            })
+        }catch(err){
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
+        }
+    }
 } 
 
 module.exports = controller
