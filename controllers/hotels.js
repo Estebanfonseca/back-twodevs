@@ -35,7 +35,7 @@ const controller = {
             name ? query.name = { $regex : name, $options: 'i' } : ''
             req.query.order?
             order = {name:req.queryorder} : ''
-            let hotel = await Hotel.find(query).sort(order)
+            let hotel = await Hotel.find(query).sort(order).populate('userID',["name","photo"])
             if(hotel){
                 res.status(200).json({
                     response: hotel,
