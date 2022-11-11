@@ -55,7 +55,26 @@ const controller = {
                 message: err.message
             })
         }
-    }
+    },
+    update: async (req,res)=>{
+        let {id} = req.params
+        try{
+            let hotel = await Hotel.findOneAndUpdate({_id:id},req.body,{new:true})
+            hotel? res.status(200).json({
+                response: hotel,
+                    success:true,
+                    message: 'the hotel was update'
+            }) : res.status(404).json({
+                success:false,
+                message:'not found'
+            })
+        }catch(err){
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
+        }}
+    
 } 
 
 module.exports = controller
