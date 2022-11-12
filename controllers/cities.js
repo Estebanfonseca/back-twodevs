@@ -33,7 +33,6 @@ const controller = {
         try {
             if(id){
                 let city = await City.findById(id).populate('userId', ['name', 'photo'])
-                console.log(city);
                 city ?
                 res.status(200).json({
                     response: city,
@@ -44,7 +43,6 @@ const controller = {
                     success: false,
                     message: "no cities found"
                 })
-                console.log(city);
             } else{
                 req.query.name ?
                 newName = req.query.name.toLowerCase() : ''
@@ -70,6 +68,9 @@ const controller = {
                 message: err.message
             })
         }
+    },
+    update: (req, res) => {
+
     }
 }
 
