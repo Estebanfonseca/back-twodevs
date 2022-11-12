@@ -30,14 +30,15 @@ const controller = {
         let newName
         let newContinent
         try {
+            console.log(req.query.continent);
             req.query.name ?
             newName = req.query.name.toLowerCase() : ''
             req.query.continent ?
-            newContinent = req.query.continent.toLowerCase() : ''
+            newContinent = req.query.continent : ''
             newName ? query.name = { $regex : newName, $options: 'i' } : ''
-            newContinent ? query.continent = { $regex : new RegExp(`^${newContinent}$`, 'i') } : ''
+            newContinent ? query.continent = { $in: newContinent } : ''
             let cities = await City.find(query)
-            cities.length > 0 ?
+            cities ?
             res.status(200).json({
                 response: cities,
                 success: true,
