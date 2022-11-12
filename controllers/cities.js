@@ -29,25 +29,41 @@ const controller = {
         let query = {}
         let newName
         let newContinent
+        let {id} = req.params
         try {
-            console.log(req.query.continent);
-            req.query.name ?
-            newName = req.query.name.toLowerCase() : ''
-            req.query.continent ?
-            newContinent = req.query.continent : ''
-            newName ? query.name = { $regex : newName, $options: 'i' } : ''
-            newContinent ? query.continent = { $in: newContinent } : ''
-            let cities = await City.find(query)
-            cities ?
-            res.status(200).json({
-                response: cities,
-                success: true,
-                message: "found cities"
-            }) :
-            res.status(400).json({
-                success: false,
-                message: "no cities found"
-            })
+            if(id){
+                let city = await City.findById(id).populate('userId', ['name', 'photo'])
+                console.log(city);
+                city ?
+                res.status(200).json({
+                    response: city,
+                    success: true,
+                    message: "found city"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no cities found"
+                })
+                console.log(city);
+            } else{
+                req.query.name ?
+                newName = req.query.name.toLowerCase() : ''
+                req.query.continent ?
+                newContinent = req.query.continent : ''
+                newName ? query.name = { $regex : newName, $options: 'i' } : ''
+                newContinent ? query.continent = { $in: newContinent } : ''
+                let cities = await City.find(query)
+                cities ?
+                res.status(200).json({
+                    response: cities,
+                    success: true,
+                    message: "found cities"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no cities found"
+                })
+            }
         } catch (err) {
             res.status(400).json({
                 success: false,
