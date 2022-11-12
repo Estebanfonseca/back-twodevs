@@ -84,6 +84,7 @@ const controller = {
                 message: err.message
             })
         }
+        
     },
     destroy: async (req,res)=>{
         let {id} = req.params
