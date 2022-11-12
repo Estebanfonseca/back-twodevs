@@ -25,6 +25,26 @@ const controller = {
             })
         }
     }, 
+    read:async(req,res)=>{
+        let {query} = req
+        try{
+            let shows = await Show.find(query)
+            shows? res.status(200).json({
+                response: shows.map(item=>({name:item.name,photo:item.photo,description:item.description,price:item.price,date:item.date})),
+                    success:true,
+                    message: 'the show was update'
+            }) : res.status(404).json({
+                success:false,
+                message:'not found'
+            })
+        }catch(err){
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
+        }
+    },
+
     update: async (req,res)=>{
         let {id} = req.params
         try{
