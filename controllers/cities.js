@@ -69,8 +69,26 @@ const controller = {
             })
         }
     },
-    update: (req, res) => {
-
+    update: async(req, res) => {
+        try {
+            let {id} = req.params
+            let city = await City.findOneAndUpdate({_id:id},req.body,{new:true})
+            city ?
+            res.status(200).json({
+                response: city,
+                success: true,
+                message: "City updated"
+            }) :
+            res.status(404).json({
+                response: false,
+                message: "City not found"
+            })
+        } catch (err) {
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
+        }
     }
 }
 
