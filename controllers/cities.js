@@ -89,6 +89,27 @@ const controller = {
                 message: err.message
             })
         }
+    },
+    destroy: async(req, res) => {
+        try {
+            let {id} = req.params
+            let city = await City.findByIdAndDelete(id)
+            city ?
+            res.status(200).json({
+                response: city,
+                success: true,
+                message: "City deleted"
+            }) :
+            res.status(404).json({
+                response: false,
+                message: "City not found"
+            })
+        } catch (err) {
+            res.status(400).json({
+                success: false,
+                message: err.message
+            })
+        }
     }
 }
 
