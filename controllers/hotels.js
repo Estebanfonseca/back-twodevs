@@ -8,7 +8,7 @@ const controller = {
             if(alreadyExist.length > 0){
                 res.status(400).json({
                     success: false,
-                    message: "hotel name  already exists"
+                    message: "hotel name already exists"
                 })
             } else{
                 let newHotel = await Hotel.create(req.body)
@@ -39,7 +39,7 @@ const controller = {
                     message:'details of hotel here' 
                 }) : res.status(404).json({
                     success:false,
-                    message:'not found'
+                    message:'Hotel not found'
                 })
 
             }else{
@@ -57,7 +57,7 @@ const controller = {
                     }):
                     res.status(404).json({
                         success:false,
-                        message:'not found'
+                        message:'Hotels not found'
                     })
                 }
         }catch(err){
@@ -77,7 +77,7 @@ const controller = {
                     message: 'the hotel was update'
             }) : res.status(404).json({
                 success:false,
-                message:'not found'
+                message:'Hotel not found'
             })
         }catch(err){
             res.status(400).json({
@@ -97,7 +97,7 @@ const controller = {
                     message: 'the hotel was delete'
             }) : res.status(404).json({
                 success:false,
-                message:'not found'
+                message:'Hotel not found'
             })
         }catch(err){
             res.status(400).json({

@@ -8,7 +8,7 @@ const controller = {
             if(alreadyExist.length > 0){
                 res.status(400).json({
                     success: false,
-                    message: "show name  already exists"
+                    message: "show name already exists"
                 })
             } else{
                 let newShow = await Show.create(req.body)
@@ -35,7 +35,7 @@ const controller = {
                     message: 'the show was update'
             }) : res.status(404).json({
                 success:false,
-                message:'not found'
+                message:'Show not found'
             })
         }catch(err){
             res.status(400).json({
@@ -55,7 +55,7 @@ const controller = {
                     message: 'the show was update'
             }) : res.status(404).json({
                 success:false,
-                message:'not found'
+                message:'Show not found'
             })
         }catch(err){
             res.status(400).json({
@@ -74,7 +74,7 @@ const controller = {
                     message: 'the show was delete'
             }) : res.status(404).json({
                 success:false,
-                message:'not found'
+                message:'Show not found'
             })
         }catch(err){
             res.status(400).json({
