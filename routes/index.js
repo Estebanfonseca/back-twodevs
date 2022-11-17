@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
+let router = require('express').Router()
+let usersRouter = require('./users')
+let citiesRouter = require('./cities')
+let hotelsRouter = require('./hotels')
+let showsRouter = require('./shows')
+let itinerariesRouter = require('./itineraries')
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.use('/users', usersRouter)
+router.use('/cities', citiesRouter)
+router.use('/hotels', hotelsRouter)
+router.use('/shows' ,showsRouter)
+router.use('/itineraries', itinerariesRouter)
 
 module.exports = router;
