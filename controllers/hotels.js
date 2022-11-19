@@ -49,7 +49,7 @@ const controller = {
                 req.query.order?
                 order = {name:req.query.order} : ''
                 let hotel = await Hotel.find(query).sort(order)
-                hotel?
+                hotel.length !== 0?
                     res.status(200).json({
                         response: hotel,
                         success:true,
