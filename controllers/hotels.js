@@ -13,7 +13,7 @@ const controller = {
             } else{
                 let newHotel = await Hotel.create(req.body)
                 res.status(201).json({
-                    id: newHotel._id,
+                    response: newHotel,
                     success: true,
                     message: "new hotel created"
                 })
