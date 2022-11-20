@@ -2,11 +2,11 @@ const app = require('../app')
 const {assert} = require('chai')
 const request = require('supertest')
 
-describe('GET /cities', function(){
-    it('should return an array of objects', function(done){
+describe('GET /cities', () => {
+    it('should return an array of objects', done => {
         request(app)
             .get('/api/cities')
-            .expect((res) => {
+            .expect(res => {
                 let data = res.body.response
                 assert.isArray(data, 'it should be an array')
                 data.forEach(element => {
@@ -14,10 +14,7 @@ describe('GET /cities', function(){
                 });
             })
             .end((err, res) => {
-                if(err){
-                    return done(err)
-                }
-                return done()
+                err ? done(err) : done()
             })
 })
 })
