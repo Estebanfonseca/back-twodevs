@@ -27,7 +27,19 @@ const controller = {
     },
     read:async(req,res)=>{
         try{
-            if(req.query.userId){
+            if(req.params.id){
+                let itinerary = await Itinerary.findById(req.params.id).populate('userId', ['name', 'photo'])
+                itinerary ?
+                res.status(200).json({
+                    response: itinerary,
+                    success: true,
+                    message: "found itinerary"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no itineraries found"
+                })
+            }else if(req.query.userId){
                 console.log(req.query.userId)
                 let itineraries = await Itinerary.find({userId: req.query.userId})
                 itineraries ?
