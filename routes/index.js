@@ -4,11 +4,14 @@ let citiesRouter = require('./cities')
 let hotelsRouter = require('./hotels')
 let showsRouter = require('./shows')
 let itinerariesRouter = require('./itineraries')
+let myHotelsRouter=require('./myhotels')
+const { route } = require('./users')
 
 router.use('/users', usersRouter)
 router.use('/cities', citiesRouter)
 router.use('/hotels', hotelsRouter)
 router.use('/shows' ,showsRouter)
 router.use('/itineraries', itinerariesRouter)
+router.use('/myhotels',myHotelsRouter)
 
 module.exports = router;
