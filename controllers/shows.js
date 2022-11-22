@@ -30,7 +30,7 @@ const controller = {
         try{
             let shows = await Show.find(query)
             shows? res.status(200).json({
-                response: shows.map(item=>({name:item.name,photo:item.photo,description:item.description,price:item.price,date:item.date})),
+                response: shows.map(item=>({_id:item._id,name:item.name,photo:item.photo,description:item.description,price:item.price,date:item.date})),
                     success:true,
                     message: 'the show was update'
             }) : res.status(404).json({
