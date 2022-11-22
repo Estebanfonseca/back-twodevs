@@ -42,8 +42,19 @@ const controller = {
                     success:false,
                     message:'Hotel not found'
                 })
-
-            }else{
+            }else if(req.query.userID){
+                let hotels = await Hotel.find({userID: req.query.userID})
+                hotels ?
+                res.status(200).json({
+                    response: hotels,
+                    success: true,
+                    message: "found cities"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no cities found"
+                })
+            } else{
                 req.query.name?
                 name= req.query.name.toLowerCase() : ''
                 name ? query.name = { $regex : name, $options: 'i' } : ''
