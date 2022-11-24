@@ -27,17 +27,45 @@ const controller = {
     },
     read:async(req,res)=>{
         try{
-            let itineraries = await Itinerary.find(req.query)
-            itineraries ? 
-            res.status(200).json({
+            if(req.params.id){
+                let itinerary = await Itinerary.findById(req.params.id).populate('userId', ['name', 'photo'])
+                itinerary ?
+                res.status(200).json({
+                    response: itinerary,
+                    success: true,
+                    message: "found itinerary"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no itineraries found"
+                })
+            }else if(req.query.userId){
+                console.log(req.query.userId)
+                let itineraries = await Itinerary.find({userId: req.query.userId})
+                itineraries ?
+                res.status(200).json({
                     response: itineraries,
-                    success:true,
-                    message: 'Itineraries found'
-            }) :
-            res.status(404).json({
-                success:false,
-                message:'Itineraries not found'
-            })
+                    success: true,
+                    message: "found itineraries"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no itineraries found"
+                })
+            } else{
+                let itineraries = await Itinerary.find(req.query)
+                itineraries ? 
+                res.status(200).json({
+                        response: itineraries,
+                        success:true,
+                        message: 'Itineraries found'
+                        
+                }) :
+                res.status(404).json({
+                    success:false,
+                    message:'Itineraries not found'
+                })
+             }
         }catch(err){
             res.status(400).json({
                 success: false,

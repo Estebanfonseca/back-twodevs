@@ -1,5 +1,6 @@
 const Hotel = require('../models/Hotel')
 
+
 const controller = {
     create: async(req, res) => {
         try{
@@ -13,7 +14,7 @@ const controller = {
             } else{
                 let newHotel = await Hotel.create(req.body)
                 res.status(201).json({
-                    id: newHotel._id,
+                    response: newHotel,
                     success: true,
                     message: "new hotel created"
                 })
@@ -41,15 +42,26 @@ const controller = {
                     success:false,
                     message:'Hotel not found'
                 })
-
-            }else{
+            }else if(req.query.userID){
+                let hotels = await Hotel.find({userID: req.query.userID})
+                hotels ?
+                res.status(200).json({
+                    response: hotels,
+                    success: true,
+                    message: "found cities"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no cities found"
+                })
+            } else{
                 req.query.name?
                 name= req.query.name.toLowerCase() : ''
                 name ? query.name = { $regex : name, $options: 'i' } : ''
                 req.query.order?
                 order = {name:req.query.order} : ''
                 let hotel = await Hotel.find(query).sort(order)
-                hotel?
+                hotel ?
                     res.status(200).json({
                         response: hotel,
                         success:true,
