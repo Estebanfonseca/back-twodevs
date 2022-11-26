@@ -4,6 +4,7 @@ let {create, read, update, destroy} = require('../controllers/itineraries')
 
 router.post('/', create)
 router.get('/', read)
+router.get('/:id', read)
 router.put('/:id', update)
 router.delete('/:id', destroy)
 

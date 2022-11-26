@@ -43,6 +43,18 @@ const controller = {
                     success: false,
                     message: "no cities found"
                 })
+            }else if(req.query.userId){
+                let cities = await City.find({userId: req.query.userId})
+                cities ?
+                res.status(200).json({
+                    response: cities,
+                    success: true,
+                    message: "found cities"
+                }) :
+                res.status(404).json({
+                    success: false,
+                    message: "no cities found"
+                })
             } else{
                 req.query.name ?
                 newName = req.query.name.toLowerCase() : ''

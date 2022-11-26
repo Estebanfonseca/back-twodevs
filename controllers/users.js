@@ -1,28 +1,40 @@
 const User = require('../models/User')
+const crypto = require('crypto')
+const bcryptjs = require('bcryptjs')
+const accountVerificationEmail = require('./accountVerificationEmail')
+const { userSignedUpResponse, userNotFoundResponse } = require('../config/responses/responses')
 
 const controller = {
-    create: async(req, res) => {
+
+    signUp: async(req, res, next) => {
+        let verified = false
+        let logged = false
+        let code = crypto.randomBytes(10).toString('hex')
+        req.body.password = bcryptjs.hashSync(req.body.password, 10)
         try{
-            let newEmail = req.body.email.toLowerCase()
-            let alreadyExist = await User.find({email: { $regex : new RegExp(`^${newEmail}$`, 'i') }})
-            if(alreadyExist.length > 0){
-                res.status(400).json({
-                    success: false,
-                    message: "user email already exists"
-                })
-            } else{
-                let newUser = await User.create(req.body)
-                res.status(201).json({
-                    id: newUser._id,
-                    success: true,
-                    message: "new user created"
-                })
-            }
-        } catch(err){
-            res.status(400).json({
-                success: false,
-                message: err.message
+            await User.create({
+                ...req.body, verified, logged, code
             })
+            await accountVerificationEmail(req.body.email, code)
+            return userSignedUpResponse(req, res)
+        } catch(err){
+            next(err)
+        }
+    },
+
+    verify: async(req, res, next) => {
+        const {code} = req.params
+        try {
+            let user = await User.findOneAndUpdate(
+                {code: code},
+                {verified: true},
+                {new: true}
+            )
+            user ?
+            res.redirect('http://localhost:3000/login') :
+            userNotFoundResponse(req, res)
+        } catch (err) {
+            next(err)
         }
     }
 }
