@@ -1,52 +1,80 @@
 const User = require('../models/User')
-const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
+const bcryptjs = require('bcryptjs')
+const accountVerificationEmail = require('./accountVerificationEmail')
+const jwt = require('jsonwebtoken')
+const { userSignedUpResponse, userNotFoundResponse } = require('../config/responses/responses')
 
 const controller = {
-    create: async(req, res) => {
+
+    signUp: async(req, res, next) => {
+        let verified = false
+        let logged = false
+        let code = crypto.randomBytes(10).toString('hex')
+        req.body.password = bcryptjs.hashSync(req.body.password, 10)
         try{
-            let newEmail = req.body.email.toLowerCase()
-            let alreadyExist = await User.find({email: { $regex : new RegExp(`^${newEmail}$`, 'i') }})
-            if(alreadyExist.length > 0){
-                res.status(400).json({
-                    success: false,
-                    message: "user email already exists"
-                })
-            } else{
-                let newUser = await User.create(req.body)
-                res.status(201).json({
-                    id: newUser._id,
-                    success: true,
-                    message: "new user created"
-                })
-            }
-        } catch(err){
-            res.status(400).json({
-                success: false,
-                message: err.message
+            await User.create({
+                ...req.body, verified, logged, code
             })
+            await accountVerificationEmail(req.body.email, code)
+            return userSignedUpResponse(req, res)
+        } catch(err){
+            next(err)
         }
     },
-    sign_in: async(req,res)=>{
+
+    verify: async(req, res, next) => {
+        const {code} = req.params
+        try {
+            let user = await User.findOneAndUpdate(
+                {code: code},
+                {verified: true},
+                {new: true}
+            )
+            user ?
+            res.redirect('http://localhost:3000/login') :
+            userNotFoundResponse(req, res)
+        } catch (err) {
+            next(err)
+        }
+    },
+    sign_in: async(req,res,next)=>{
         const {password} = req.body
         const {user} = req
         try{
-            const verifyPass = bcrypt.compareSync(password,user.password)
+            const verifyPass = bcryptjs.compare(password,user.password)
             if(verifyPass){
-                await User.findOneAndUpdate({_id:user._id},{logged:true})
-                const token = jwt.sign({name:user.name,photo:user.photo,logged:user.logged},process.env.KEY_JWT,{expiresIn:60*60*24})
+                let userS = await User.findOneAndUpdate({_id:user._id},{logged:true},{new:true})
+                const token = jwt.sign({_id:userS._id ,name:userS.name,photo:userS.photo,logged:userS.logged},process.env.KEY_JWT,{expiresIn:60*60*24})
                 return res.status(200).json({
-                    response:{user,token},
+                    response:{userS,token},
                     success:true,
-                    message:'welcome' + user.name
+                    message:'welcome' + userS.name
                 })
             }
             return 'no se pudo'
         } catch(err){
-            res.status(400).json({
-                success: false,
-                message: err.message,
-
+            next(err)
+        }
+    },
+    singInByToken:async(req,res,next)=>{
+        let {user}= req
+        try{
+            return res.json({
+                response:{
+                    user:{
+                        name:user.name,
+                        photo:user.photo,
+                        _id:user._id,
+                        role:user.role,
+                        logged:user.logged
+                    }
+                },
+                success:true,
+                message:'welcome ' + user.name
             })
+        }catch(err){
+            next(err)
         }
     }
 }
