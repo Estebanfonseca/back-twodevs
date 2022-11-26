@@ -9,12 +9,11 @@ const controller = {
     signUp: async(req, res, next) => {
         let verified = false
         let logged = false
-        let role = 'user'
         let code = crypto.randomBytes(10).toString('hex')
         req.body.password = bcryptjs.hashSync(req.body.password, 10)
         try{
             await User.create({
-                ...req.body, verified, logged, role, code
+                ...req.body, verified, logged, code
             })
             await accountVerificationEmail(req.body.email, code)
             return userSignedUpResponse(req, res)

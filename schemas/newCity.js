@@ -7,8 +7,8 @@ const schema = joi.object({
             .max(50),
     continent:joi.string()
                 .required()
-                .min(4)
-                .max(20),
+                .valid('africa', 'antartica', 'asia', 'Europe', 'north america', 'south america', 'oceania')
+                .insensitive(),
     photo:joi.string()
             .required()
             .uri(),
