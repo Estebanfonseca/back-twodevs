@@ -16,8 +16,29 @@ const userNotFoundResponse = (req, res) => {
         message: 'user not found'
     })
 }
+function invalidCredentialsResponse(req,res) {
+    return res.status(401).json({
+        success: false,
+        message: 'email or password incorrect'
+    })
+}
+function verifyResponse(req,res) {
+    return res.status(401).json({
+        success: false,
+        message: 'Please, verify your email account and try again'
+    })
+}
+function mustSignInResponse(req,res) {
+    return res.status(400).json({
+        success: false,
+        message: 'sign in please!'
+    })
+}
 module.exports = {
     userExistsResponse,
     userSignedUpResponse,
-    userNotFoundResponse
+    userNotFoundResponse,
+    invalidCredentialsResponse,
+    verifyResponse,
+    mustSignInResponse
 }

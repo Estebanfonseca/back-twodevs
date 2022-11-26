@@ -2,6 +2,7 @@ const User = require('../models/User')
 const crypto = require('crypto')
 const bcryptjs = require('bcryptjs')
 const accountVerificationEmail = require('./accountVerificationEmail')
+const jwt = require('jsonwebtoken')
 const { userSignedUpResponse, userNotFoundResponse } = require('../config/responses/responses')
 
 const controller = {
@@ -34,6 +35,45 @@ const controller = {
             res.redirect('http://localhost:3000/login') :
             userNotFoundResponse(req, res)
         } catch (err) {
+            next(err)
+        }
+    },
+    sign_in: async(req,res,next)=>{
+        const {password} = req.body
+        const {user} = req
+        try{
+            const verifyPass = bcryptjs.compare(password,user.password)
+            if(verifyPass){
+                let userS = await User.findOneAndUpdate({_id:user._id},{logged:true},{new:true})
+                const token = jwt.sign({_id:userS._id ,name:userS.name,photo:userS.photo,logged:userS.logged},process.env.KEY_JWT,{expiresIn:60*60*24})
+                return res.status(200).json({
+                    response:{userS,token},
+                    success:true,
+                    message:'welcome' + userS.name
+                })
+            }
+            return 'no se pudo'
+        } catch(err){
+            next(err)
+        }
+    },
+    singInByToken:async(req,res,next)=>{
+        let {user}= req
+        try{
+            return res.json({
+                response:{
+                    user:{
+                        name:user.name,
+                        photo:user.photo,
+                        _id:user._id,
+                        role:user.role,
+                        logged:user.logged
+                    }
+                },
+                success:true,
+                message:'welcome ' + user.name
+            })
+        }catch(err){
             next(err)
         }
     }
