@@ -1,8 +1,7 @@
 const joi = require('joi')
 
-
 const schema = joi.object({
-    email:joi.string().required().min(3).max(30),
+    email:joi.string().required().email({minDomainSegments: 2}),
     password:joi.string().required().alphanum().min(8)
 })
 

@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const bcryptjs = require('bcryptjs')
 const accountVerificationEmail = require('./accountVerificationEmail')
 const jwt = require('jsonwebtoken')
-const { userSignedUpResponse, userNotFoundResponse } = require('../config/responses/responses')
+const { userSignedUpResponse, userNotFoundResponse, invalidCredentialsResponse } = require('../config/responses/responses')
 
 const controller = {
 
@@ -42,17 +42,20 @@ const controller = {
         const {password} = req.body
         const {user} = req
         try{
-            const verifyPass = bcryptjs.compare(password,user.password)
+            const verifyPass = bcryptjs.compareSync(password,user.password)
             if(verifyPass){
-                let userS = await User.findOneAndUpdate({_id:user._id},{logged:true},{new:true})
-                const token = jwt.sign({_id:userS._id ,name:userS.name,photo:userS.photo,logged:userS.logged},process.env.KEY_JWT,{expiresIn:60*60*24})
+                await User.findOneAndUpdate({_id:user._id},{logged:true},{new:true})
+                let token = jwt.sign({_id:user._id ,name:user.name,photo:user.photo,logged:user.logged},process.env.KEY_JWT,{expiresIn:60*60*24})
                 return res.status(200).json({
-                    response:{userS,token},
+                    response:{user,token},
                     success:true,
-                    message:'welcome' + userS.name
+                    message:'welcome' + user.name
                 })
             }
-            return 'no se pudo'
+            return res.status(401).json({
+                success: false,
+                message: 'email or password incorrect'
+            })
         } catch(err){
             next(err)
         }
