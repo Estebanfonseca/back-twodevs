@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const bcryptjs = require('bcryptjs')
 const accountVerificationEmail = require('./accountVerificationEmail')
 const jwt = require('jsonwebtoken')
-const { userSignedUpResponse, userNotFoundResponse, invalidCredentialsResponse } = require('../config/responses/responses')
+const { userSignedUpResponse, userNotFoundResponse, invalidCredentialsResponse, userSignedOutResponse } = require('../config/responses/responses')
 
 const controller = {
 
@@ -78,6 +78,15 @@ const controller = {
             })
         }catch(err){
             next(err)
+        }
+    },
+    signOut: async(req, res, next) => {
+        let {_id} = req.user
+        try {
+            await User.findOneAndUpdate({_id}, {logged:false}, {new:true})
+            return userSignedOutResponse(req, res)
+        } catch (error) {
+            next(error)
         }
     }
 }

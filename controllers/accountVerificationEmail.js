@@ -30,10 +30,10 @@ const getTransport = (client) => {
 const getEmailBody = (email, host, code) => {
     return `
         <div>
-            <h1 style="text-align:center;">My Itinerary</h1>
-            <h2>Account verification</h2>
-            <h4 style="text-align:center;">${email}</h4>
-            <div style="display:flex; justify-content:center;">
+            <h1 style="text-align: center;">My Itinerary</h1>
+            <h2 style="text-decoration: underline;">Account verification</h2>
+            <h4 style="text-align: center;">${email}</h4>
+            <div style="display: flex; justify-content: center;">
                 <a href="${host}auth/verify/${code}">Verify my account.</a>
             </div>
         </div>`
