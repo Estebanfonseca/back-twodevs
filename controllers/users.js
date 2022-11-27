@@ -49,7 +49,7 @@ const controller = {
                 return res.status(200).json({
                     response:{user,token},
                     success:true,
-                    message:'welcome' + user.name
+                    message:'welcome ' + user.name
                 })
             }
             return res.status(401).json({
