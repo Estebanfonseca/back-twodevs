@@ -65,7 +65,7 @@ const controller = {
                     success:false,
                     message:'Itineraries not found'
                 })
-             }
+            }
         }catch(err){
             res.status(400).json({
                 success: false,
