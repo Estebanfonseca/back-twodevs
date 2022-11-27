@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken')
 const { userSignedUpResponse, userNotFoundResponse, invalidCredentialsResponse } = require('../config/responses/responses')
 
 const controller = {
-
     signUp: async(req, res, next) => {
         let verified = false
         let logged = false
@@ -49,13 +48,10 @@ const controller = {
                 return res.status(200).json({
                     response:{user,token},
                     success:true,
-                    message:'welcome' + user.name
+                    message:'welcome ' + user.name
                 })
             }
-            return res.status(401).json({
-                success: false,
-                message: 'email or password incorrect'
-            })
+            return invalidCredentialsResponse()
         } catch(err){
             next(err)
         }
