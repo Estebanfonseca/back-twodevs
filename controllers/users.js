@@ -6,6 +6,41 @@ const jwt = require('jsonwebtoken')
 const { userSignedUpResponse, userNotFoundResponse, invalidCredentialsResponse, userSignedOutResponse } = require('../config/responses/responses')
 
 const controller = {
+    readme:async(req,res,next)=>{
+        let {id} = req.params 
+        try{
+            let userid = await User.findById(id)
+            userid? res.status(200).json({
+                response: userid,
+                success:true,
+                message:'user dates here' 
+            }) : res.status(404).json({
+                success:false,
+                message:'user not found'
+            })
+        }catch(err){
+            next(err)
+        }
+    },
+
+    updateme:async(req,res,next)=>{
+        let {id} = req.params
+        try{
+            let user = await User.findOneAndUpdate({_id:id},req.body,{new:true})
+            user ?
+            res.status(200).json({
+                response: user,
+                    success:true,
+                    message: 'your profile was update'
+            }) :
+            res.status(404).json({
+                success:false,
+                message:'profile not found'
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
 
     signUp: async(req, res, next) => {
         let verified = false
@@ -52,10 +87,7 @@ const controller = {
                     message:'welcome ' + user.name
                 })
             }
-            return res.status(401).json({
-                success: false,
-                message: 'email or password incorrect'
-            })
+            return invalidCredentialsResponse()
         } catch(err){
             next(err)
         }
