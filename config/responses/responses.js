@@ -34,11 +34,18 @@ function mustSignInResponse(req,res) {
         message: 'sign in please!'
     })
 }
+const userSignedOutResponse = (req, res) => {
+    return res.status(201).json({
+        success: true,
+        message: 'user signed out'
+    })
+}
 module.exports = {
     userExistsResponse,
     userSignedUpResponse,
     userNotFoundResponse,
     invalidCredentialsResponse,
     verifyResponse,
-    mustSignInResponse
+    mustSignInResponse,
+    userSignedOutResponse
 }
