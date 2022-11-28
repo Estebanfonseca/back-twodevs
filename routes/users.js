@@ -15,7 +15,6 @@ router.post('/sign-in',validator(schemaSignIn), accountExistSignIn,verifyAccount
 router.post('/token',passport.authenticate('jwt',{session:false}),mustSignIn,singInByToken)
 router.post('/sign-out', passport.authenticate('jwt', {session:false}), signOut)
 router.get('/me/:id',readme)
-router.get('/me/:id',readme)
 router.patch('/me/:id',updateme)
 
 module.exports = router;
