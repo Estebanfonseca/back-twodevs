@@ -9,6 +9,6 @@ router.post('/', validator(schema), passport.authenticate('jwt',{session:false})
 router.get('/', read)
 router.get('/:id', read)
 router.put('/:id', validator(schema), passport.authenticate('jwt',{session:false}), cityUserIdExists, update)
-router.delete('/:id', validator(schema), passport.authenticate('jwt',{session:false}), cityUserIdExists, destroy)
+router.delete('/:id', passport.authenticate('jwt',{session:false}), cityUserIdExists, destroy)
 
 module.exports = router;
