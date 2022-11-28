@@ -40,6 +40,12 @@ const userSignedOutResponse = (req, res) => {
         message: 'user signed out'
     })
 }
+const idDontMatchResponse = (req, res) => {
+    return res.status(401).json({
+        success: false,
+        message: 'user id unauthorized'
+    })
+}
 module.exports = {
     userExistsResponse,
     userSignedUpResponse,
@@ -47,5 +53,6 @@ module.exports = {
     invalidCredentialsResponse,
     verifyResponse,
     mustSignInResponse,
-    userSignedOutResponse
+    userSignedOutResponse,
+    idDontMatchResponse
 }
