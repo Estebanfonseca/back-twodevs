@@ -7,7 +7,7 @@ let validator = require('../middlewares/validator')
 router.post('/',validator(schema), create)
 router.get('/',read)
 router.get('/:id',read)
-router.patch('/:id',update)
+router.patch('/:id',validator(schema), update)
 router.delete('/:id',destroy)
 
 module.exports = router
