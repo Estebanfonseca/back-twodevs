@@ -39,3 +39,17 @@ describe('POST /cities', () => {
             })
     })
 })
+describe('DELETE /cities', () => {
+    it('should return success true and an object with _id property equal than params id', done => {
+        let testId = '638448672f7b4a26edad6a23'
+        request(app)
+            .delete(`/api/cities/${testId}`)
+            .expect(res => {
+                assert.equal(true, res.body.success, 'success should be true')
+                assert.equal(testId, res.body.response._id, 'params id should be equal to response _id')
+            })
+            .end((err, res) => {
+                err ? done(err) : done()
+            })
+    })
+})
