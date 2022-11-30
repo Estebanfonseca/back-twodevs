@@ -28,7 +28,7 @@ const controller = {
     read:async(req,res)=>{
         try{
             if(req.params.id){
-                let itinerary = await Itinerary.findById(req.params.id).populate('userId', ['name', 'photo'])
+                let itinerary = await Itinerary.findById(req.params.id).populate('userId', ['_id', 'name', 'photo'])
                 itinerary ?
                 res.status(200).json({
                     response: itinerary,
@@ -65,7 +65,7 @@ const controller = {
                     success:false,
                     message:'Itineraries not found'
                 })
-             }
+            }
         }catch(err){
             res.status(400).json({
                 success: false,
@@ -76,7 +76,7 @@ const controller = {
     update: async(req,res) => {
         let {id} = req.params
         try{
-            let itinerary = await Itinerary.findOneAndUpdate({_id:id},req.body,{new:true})
+            let itinerary = await Itinerary.findOneAndUpdate({_id:id},req.body,{new:true}).populate('userId', ['userId'])
             itinerary ?
             res.status(200).json({
                 response: itinerary,
