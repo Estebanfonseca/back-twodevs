@@ -1,6 +1,6 @@
 const {idDontMatchResponse} = require("../config/responses/responses")
 
-const userIdExists = model => [ 
+const userIdExists = (model) => [ 
     async(req,res,next) => {
         let city = await model.findOne({_id: req.params.id})
         if(city.userId.equals(req.user._id)){
