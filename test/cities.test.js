@@ -1,6 +1,7 @@
 const app = require('../app')
 const {assert} = require('chai')
 const request = require('supertest')
+const {TEST_TOKEN} = process.env
 
 describe('GET /cities', () => {
     it('should return an array of objects', done => {
@@ -27,9 +28,11 @@ describe('POST /cities', () => {
             "population": 18867000,
             "userId": "636d210297606439046194bb"
         }
+        let token = TEST_TOKEN
         request(app)
             .post('/api/cities')
             .send(testReq)
+            .set('Authorization', `bearer ${token}`)
             .expect(res => {
                 assert.isString(testReq.name, 'it should be a string')
                 assert.equal(false, res.body.success, 'should be success false')
@@ -41,9 +44,11 @@ describe('POST /cities', () => {
 })
 describe('DELETE /cities', () => {
     it('should return success true and an object with _id property equal than params id', done => {
-        let testId = '638448672f7b4a26edad6a23'
+        let testId = '63861b58b6e0bee17235c5c1'
+        let token = TEST_TOKEN
         request(app)
             .delete(`/api/cities/${testId}`)
+            .set('Authorization', `bearer ${token}`)
             .expect(res => {
                 assert.equal(true, res.body.success, 'success should be true')
                 assert.equal(testId, res.body.response._id, 'params id should be equal to response _id')
