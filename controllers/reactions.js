@@ -5,6 +5,9 @@ const controller = {
         if(req.query.itineraryId){
             query = {itineraryId: req.query.itineraryId}
         }
+        if(req.query.userId){
+            query = {userId: {$in: [req.query.userId]}}
+        }
         try {
             let reactions = await Reaction.find(query)
             reactions.length > 0 ?
@@ -15,7 +18,7 @@ const controller = {
             }) :
             res.status(404).json({
                 success:false,
-                message:'Reactions not found in that itinerary'
+                message:'Reactions not found'
             })
         } catch (error) {
             res.status(400).json({
@@ -73,6 +76,27 @@ const controller = {
                     message:'Reaction not found in that itinerary'
                 })
             }
+        } catch (error) {
+            res.status(400).json({
+                success: false,
+                message: error.message
+            })
+        }
+    },
+    destroy: async(req, res) => {
+        let query = {_id: req.params.id, userId: {$in: [req.user._id]}}
+        try {
+            let reaction = await Reaction.findOneAndDelete(query)
+            res ?
+            res.status(200).json({
+                response: reaction,
+                success: true,
+                message: "Reaction deleted"
+            }) :
+            res.status(404).json({
+                success: false,
+                message: "Reaction not found"
+            })
         } catch (error) {
             res.status(400).json({
                 success: false,
