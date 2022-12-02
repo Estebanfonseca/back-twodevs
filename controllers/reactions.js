@@ -9,7 +9,7 @@ const controller = {
             query = {userId: {$in: [req.query.userId]}}
         }
         try {
-            let reactions = await Reaction.find(query)
+            let reactions = await Reaction.find(query).populate('itineraryId', ['photo', 'name'])
             reactions.length > 0 ?
             res.status(200).json({
                 response: reactions,
@@ -60,6 +60,7 @@ const controller = {
                             message: "reaction off"
                         })
                 } else{
+                    await Reaction.findOneAndUpdate({itineraryId: req.query.itineraryId, userId: {$in: [req.user._id]}}, {$pull: {userId: req.user._id}}, {new: true})
                     updatedReaction = await Reaction.findOneAndUpdate(
                         {name: queryName, itineraryId: req.query.itineraryId}, 
                         {$push: {userId: req.user._id}}, 
