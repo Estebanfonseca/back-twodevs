@@ -5,11 +5,14 @@ const controller = {
         if(req.query.itineraryId){
             query = {itineraryId: req.query.itineraryId}
         }
+        if(req.query.showId){
+            query = {showId: req.query.showId}
+        }
         if(req.query.userId){
             query = {userId: {$in: [req.query.userId]}}
         }
         try {
-            let reactions = await Reaction.find(query).populate('itineraryId', ['photo', 'name'])
+            let reactions = await Reaction.find(query).populate('itineraryId', ['photo', 'name']).populate('showId', ['photo', 'name'])
             reactions.length > 0 ?
             res.status(200).json({
                 response: reactions,
@@ -44,14 +47,20 @@ const controller = {
         }
     },
     update: async(req, res) => {
+        let query
         try {
             let queryName = req.query.name.toLowerCase()
-            let query = {name: queryName, itineraryId: req.query.itineraryId}
+            if(req.query.itineraryId){
+                query = {name: queryName, itineraryId: req.query.itineraryId}
+            }
+            if(req.query.showId){
+                query = {name: queryName, showId: req.query.showId}
+            }
             let reaction = await Reaction.findOne(query)
             if(reaction){
                 if(reaction.userId.includes(req.user._id)){
                     updatedReaction = await Reaction.findOneAndUpdate(
-                        {name: queryName, itineraryId: req.query.itineraryId}, 
+                        {query}, 
                         {$pull: {userId: req.user._id}},
                         {new: true})
                         res.status(200).json({
@@ -60,9 +69,14 @@ const controller = {
                             message: "reaction off"
                         })
                 } else{
-                    await Reaction.findOneAndUpdate({itineraryId: req.query.itineraryId, userId: {$in: [req.user._id]}}, {$pull: {userId: req.user._id}}, {new: true})
+                    if(req.query.itineraryId){
+                        await Reaction.findOneAndUpdate({itineraryId: req.query.itineraryId, userId: {$in: [req.user._id]}}, {$pull: {userId: req.user._id}}, {new: true})
+                    }
+                    if(req.query.showId){
+                        await Reaction.findOneAndUpdate({showId: req.query.showId, userId: {$in: [req.user._id]}}, {$pull: {userId: req.user._id}}, {new: true})
+                    }
                     updatedReaction = await Reaction.findOneAndUpdate(
-                        {name: queryName, itineraryId: req.query.itineraryId}, 
+                        {query}, 
                         {$push: {userId: req.user._id}}, 
                         {new: true})
                         res.status(200).json({
@@ -74,7 +88,7 @@ const controller = {
             } else {
                 res.status(404).json({
                     success:false,
-                    message:'Reaction not found in that itinerary'
+                    message:'Reaction not found'
                 })
             }
         } catch (error) {
