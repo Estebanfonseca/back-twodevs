@@ -9,7 +9,7 @@ const controller = {
             query = {userId: {$in: [req.query.userId]}}
         }
         try {
-            let reactions = await Reaction.find(query)
+            let reactions = await Reaction.find(query).populate('itineraryId', ['photo', 'name'])
             reactions.length > 0 ?
             res.status(200).json({
                 response: reactions,
