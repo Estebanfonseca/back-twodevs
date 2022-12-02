@@ -84,12 +84,11 @@ const controller = {
         }
     },
     destroy: async(req, res) => {
-        let query = {_id: req.params.id, userId: {$in: [req.user._id]}}
         try {
-            let reaction = await Reaction.findOneAndDelete(query)
+            let updateReaction = await Reaction.findByIdAndUpdate(req.params.id, {$pull: {userId: req.user._id}})
             res ?
             res.status(200).json({
-                response: reaction,
+                response: updateReaction,
                 success: true,
                 message: "Reaction deleted"
             }) :
