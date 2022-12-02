@@ -60,6 +60,7 @@ const controller = {
                             message: "reaction off"
                         })
                 } else{
+                    await Reaction.findOneAndUpdate({itineraryId: req.query.itineraryId, userId: {$in: [req.user._id]}}, {$pull: {userId: req.user._id}}, {new: true})
                     updatedReaction = await Reaction.findOneAndUpdate(
                         {name: queryName, itineraryId: req.query.itineraryId}, 
                         {$push: {userId: req.user._id}}, 
