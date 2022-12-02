@@ -7,6 +7,7 @@ let validator = require('../middlewares/validator')
 let Show = require('../models/Show')
 
 
+
 router.post('/', passport.authenticate('jwt',{session:false}), validator(schema), create)
 router.get('/', read)
 router.patch('/:id', passport.authenticate('jwt',{session:false}), validator(schema), userIdExists(Show), update)
