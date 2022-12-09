@@ -60,7 +60,7 @@ const controller = {
                 name ? query.name = { $regex : name, $options: 'i' } : ''
                 req.query.order?
                 order = {name:req.query.order} : ''
-                let hotel = await Hotel.find(query).sort(order)populate('cityID',["name","photo"])
+                let hotel = await Hotel.find(query).sort(order).populate('cityID',["name","photo"])
                 hotel ?
                     res.status(200).json({
                         response: hotel,
