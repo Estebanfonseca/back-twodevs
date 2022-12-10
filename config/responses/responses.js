@@ -46,6 +46,18 @@ const idDontMatchResponse = (req, res) => {
         message: 'user id unauthorized'
     })
 }
+const reactionExistsResponse = (req, res) => {
+    return res.status(400).json({
+        success: false,
+        message: 'reaction already exists here'
+    })
+}
+const activityNotFoundResponse = (req, res) => {
+    return res.status(404).json({
+        success: false,
+        message: 'activity not found'
+    })
+}
 module.exports = {
     userExistsResponse,
     userSignedUpResponse,
@@ -54,5 +66,7 @@ module.exports = {
     verifyResponse,
     mustSignInResponse,
     userSignedOutResponse,
-    idDontMatchResponse
+    idDontMatchResponse,
+    reactionExistsResponse,
+    activityNotFoundResponse
 }
