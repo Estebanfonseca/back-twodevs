@@ -92,7 +92,7 @@ const controller = {
                 message: "City updated"
             }) :
             res.status(404).json({
-                response: false,
+                success: false,
                 message: "City not found"
             })
         } catch (err) {
@@ -113,7 +113,7 @@ const controller = {
                 message: "City deleted"
             }) :
             res.status(404).json({
-                response: false,
+                success: false,
                 message: "City not found"
             })
         } catch (err) {
