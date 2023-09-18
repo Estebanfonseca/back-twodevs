@@ -67,7 +67,7 @@ const controller = {
                 {new: true}
             )
             user ?
-            res.redirect('http://localhost:3000/login') :
+            res.redirect(process.env.FRONT_URL) :
             userNotFoundResponse(req, res)
         } catch (err) {
             next(err)
